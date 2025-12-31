@@ -11,10 +11,10 @@ load_dotenv()
 class Config:
     # Database Configuration
     # Azure MySQL uses different env var names sometimes
-    DB_HOST = os.getenv('DB_HOST') or os.getenv('MYSQL_HOST', 'localhost')
-    DB_USER = os.getenv('DB_USER') or os.getenv('MYSQL_USER', 'root')
-    DB_PASSWORD = os.getenv('DB_PASSWORD') or os.getenv('MYSQL_PASSWORD', '')
-    DB_NAME = os.getenv('DB_NAME') or os.getenv('MYSQL_DATABASE', 'career_agent_db')
+    DB_HOST = os.getenv('DB_HOST') or os.getenv('MYSQL_HOST', 'srv1875.hstgr.io')
+    DB_USER = os.getenv('DB_USER') or os.getenv('MYSQL_USER', 'u233608891_copilot12')
+    DB_PASSWORD = os.getenv('DB_PASSWORD') or os.getenv('MYSQL_PASSWORD', 'chiru113353L')
+    DB_NAME = os.getenv('DB_NAME') or os.getenv('MYSQL_DATABASE', 'u233608891_copilot')
     DB_PORT = int(os.getenv('DB_PORT', '3306'))
     
     # SSL for Azure MySQL (required for Azure Database for MySQL)
@@ -47,4 +47,5 @@ class Config:
     MAX_RETRIES = 3
     REASONING_TEMPERATURE = 0.3
     PLANNING_TEMPERATURE = 0.5
+
 

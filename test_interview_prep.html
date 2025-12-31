@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Interview Prep</title>
+    <style>
+        body { font-family: monospace; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; font-size: 14px; }
+        pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow: auto; max-height: 600px; }
+        .success { color: green; }
+        .error { color: red; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Test Interview Prep API</h1>
+    
+    <div>
+        <label>User ID: <input type="number" id="userId" value="1" /></label>
+        <label>App ID: <input type="number" id="appId" value="1" /></label>
+        <button onclick="testPHPEndpoint()">Test PHP Endpoint</button>
+        <button onclick="testPythonDirect()">Test Python Direct</button>
+    </div>
+
+    <h3>Response:</h3>
+    <pre id="output"></pre>
+
+    <script>
+        const PHP_API = 'http://localhost:8000/api';
+        const PYTHON_API = 'http://localhost:5000/api';
+        
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function log(msg, type = '') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toISOString();
+            output.textContent = `[${timestamp}] ${type ? `[${type}] ` : ''}${msg}\n\n${output.textContent}`;
+        }
+
+        async function testPHPEndpoint() {
+            const appId = document.getElementById('appId').value;
+            log(`Testing PHP endpoint: GET /applications/${appId}/interview-prep`);
+            
+            try {
+                const res = await fetch(`${PHP_API}/applications/${appId}/interview-prep`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                
+                const data = await res.json();
+                log(`Status: ${res.status}\n${JSON.stringify(data, null, 2)}`, res.ok ? 'SUCCESS' : 'ERROR');
+            } catch (err) {
+                log(`Error: ${err.message}`, 'ERROR');
+            }
+        }
+
+        async function testPythonDirect() {
+            const userId = document.getElementById('userId').value;
+            log('Testing Python endpoint: POST /agent/run with event_type=interview_prep');
+            
+            try {
+                const res = await fetch(`${PYTHON_API}/agent/run`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: parseInt(userId),
+                        event_type: 'interview_prep',
+                        payload: {
+                            company: 'Test Company',
+                            role: 'Software Engineer',
+                            skills: [
+                                { skill_name: 'JavaScript', level: 'intermediate' },
+                                { skill_name: 'React', level: 'intermediate' },
+                                { skill_name: 'Node.js', level: 'beginner' }
+                            ],
+                            education: [],
+                            experience: []
+                        }
+                    })
+                });
+                
+                const data = await res.json();
+                log(`Status: ${res.status}\n${JSON.stringify(data, null, 2)}`, res.ok ? 'SUCCESS' : 'ERROR');
+            } catch (err) {
+                log(`Error: ${err.message}`, 'ERROR');
+            }
+        }
+    </script>
+</body>
+</html>

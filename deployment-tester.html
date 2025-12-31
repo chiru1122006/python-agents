@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Copilot - Deployment Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+        }
+        .test-item h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .test-item p {
+            color: #4a5568;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            background: #f9fafb;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .info-box strong {
+            color: #1e40af;
+        }
+        .checklist {
+            list-style: none;
+        }
+        .checklist li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            border-radius: 4px;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .urls {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .urls a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .urls a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background: #1e293b;
+            color: #22d3ee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Career Copilot Deployment Tester</h1>
+            <p>Test your production deployment configuration</p>
+        </div>
+
+        <div class="card">
+            <h2>📍 Your Deployment URLs</h2>
+            <div class="urls">
+                <p><strong>Frontend:</strong> <a href="https://frontend-career-copilot.vercel.app" target="_blank">https://frontend-career-copilot.vercel.app</a></p>
+                <p><strong>Backend:</strong> <a href="https://new.svcr.dev" target="_blank">https://new.svcr.dev</a></p>
+                <p><strong>API Base:</strong> <a href="https://new.svcr.dev/api" target="_blank">https://new.svcr.dev/api</a></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>✅ Pre-Deployment Checklist</h2>
+            <div class="info-box">
+                <strong>⚠️ Important:</strong> Make sure you've completed these steps before testing!
+            </div>
+            <ul class="checklist">
+                <li>Added <code>VITE_API_URL</code> to Vercel environment variables</li>
+                <li>Added <code>VITE_PYTHON_API_URL</code> to Vercel environment variables</li>
+                <li>Redeployed frontend on Vercel</li>
+                <li>Uploaded <code>.htaccess</code> to Hostinger</li>
+                <li>Uploaded updated <code>config/database.php</code> to Hostinger</li>
+                <li>Database schema imported on Hostinger</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🧪 Automated Tests</h2>
+            
+            <div class="test-item">
+                <h3>Test 1: Backend Health Check</h3>
+                <p>Tests if your PHP backend is accessible and responding correctly.</p>
+                <button class="btn" onclick="testBackendHealth()">Run Test</button>
+                <span id="health-status" class="status pending">Not Run</span>
+                <div id="health-result" style="display:none;" class="result"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>Test 2: CORS Configuration</h3>
+                <p>Tests if Cross-Origin Resource Sharing is properly configured.</p>
+                <button class="btn" onclick="testCORS()">Run Test</button>
+                <span id="cors-status" class="status pending">Not Run</span>
+                <div id="cors-result" style="display:none;" class="result"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>Test 3: Authentication Endpoint</h3>
+                <p>Tests if the login endpoint is reachable (will return 401 without credentials).</p>
+                <button class="btn" onclick="testAuthEndpoint()">Run Test</button>
+                <span id="auth-status" class="status pending">Not Run</span>
+                <div id="auth-result" style="display:none;" class="result"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>Test 4: Frontend Environment Check</h3>
+                <p>Checks if your frontend is using the correct API URLs.</p>
+                <button class="btn" onclick="testFrontendEnv()">Run Test</button>
+                <span id="env-status" class="status pending">Not Run</span>
+                <div id="env-result" style="display:none;" class="result"></div>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn" style="background: #10b981; padding: 15px 40px; font-size: 1.1em;" onclick="runAllTests()">
+                    🚀 Run All Tests
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Test Results Summary</h2>
+            <div id="summary" class="info-box">
+                <p>Run the tests above to see a summary of your deployment status.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://new.svcr.dev';
+        const API_URL = 'https://new.svcr.dev/api';
+        
+        async function testBackendHealth() {
+            const statusEl = document.getElementById('health-status');
+            const resultEl = document.getElementById('health-result');
+            
+            statusEl.className = 'status pending';
+            statusEl.textContent = 'Testing...';
+            resultEl.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                
+                resultEl.textContent = JSON.stringify(data, null, 2);
+                resultEl.style.display = 'block';
+                
+                if (response.ok && data.status === 'healthy') {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✓ Success';
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '✗ Failed';
+                }
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '✗ Error';
+                resultEl.textContent = `Error: ${error.message}\n\nPossible issues:\n- Backend is not accessible\n- Wrong URL\n- Server is down`;
+                resultEl.style.display = 'block';
+            }
+            
+            updateSummary();
+        }
+        
+        async function testCORS() {
+            const statusEl = document.getElementById('cors-status');
+            const resultEl = document.getElementById('cors-result');
+            
+            statusEl.className = 'status pending';
+            statusEl.textContent = 'Testing...';
+            resultEl.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+                
+                resultEl.textContent = `CORS Headers:\n${JSON.stringify(corsHeaders, null, 2)}\n\nStatus: ${response.status}`;
+                resultEl.style.display = 'block';
+                
+                if (response.ok) {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✓ Success';
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '✗ Failed';
+                }
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '✗ Error';
+                resultEl.textContent = `CORS Error: ${error.message}\n\nThis means:\n- CORS headers are not properly configured\n- Backend is blocking cross-origin requests\n- Check config/database.php allowed_origins`;
+                resultEl.style.display = 'block';
+            }
+            
+            updateSummary();
+        }
+        
+        async function testAuthEndpoint() {
+            const statusEl = document.getElementById('auth-status');
+            const resultEl = document.getElementById('auth-result');
+            
+            statusEl.className = 'status pending';
+            statusEl.textContent = 'Testing...';
+            resultEl.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@test.com',
+                        password: 'test123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultEl.textContent = `Status: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}`;
+                resultEl.style.display = 'block';
+                
+                // 401 is expected (wrong credentials), 404 is bad (endpoint not found)
+                if (response.status === 401 || response.status === 200) {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✓ Success (Endpoint exists)';
+                } else if (response.status === 404) {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '✗ Failed (404 - Check routing)';
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '✗ Failed';
+                }
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '✗ Error';
+                resultEl.textContent = `Error: ${error.message}\n\nPossible issues:\n- Routing not configured (.htaccess)\n- Wrong API path\n- CORS blocking request`;
+                resultEl.style.display = 'block';
+            }
+            
+            updateSummary();
+        }
+        
+        async function testFrontendEnv() {
+            const statusEl = document.getElementById('env-status');
+            const resultEl = document.getElementById('env-result');
+            
+            statusEl.className = 'status pending';
+            statusEl.textContent = 'Checking...';
+            resultEl.style.display = 'none';
+            
+            // This test needs to be run on the actual frontend
+            const info = `
+This test should be run from the deployed frontend at:
+https://frontend-career-copilot.vercel.app
+
+Open the browser console (F12) on your frontend and run:
+console.log('API URL:', import.meta.env.VITE_API_URL);
+console.log('Python API:', import.meta.env.VITE_PYTHON_API_URL);
+
+Expected values:
+VITE_API_URL: https://new.svcr.dev/api
+VITE_PYTHON_API_URL: https://new.svcr.dev
+
+If you see "undefined", the environment variables are not set in Vercel!
+            `;
+            
+            resultEl.textContent = info.trim();
+            resultEl.style.display = 'block';
+            
+            statusEl.className = 'status pending';
+            statusEl.textContent = 'Manual Check Required';
+            
+            updateSummary();
+        }
+        
+        async function runAllTests() {
+            await testBackendHealth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testCORS();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testAuthEndpoint();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            testFrontendEnv();
+        }
+        
+        function updateSummary() {
+            const healthStatus = document.getElementById('health-status').className;
+            const corsStatus = document.getElementById('cors-status').className;
+            const authStatus = document.getElementById('auth-status').className;
+            
+            const summary = document.getElementById('summary');
+            
+            const successCount = [healthStatus, corsStatus, authStatus].filter(s => s === 'status success').length;
+            const totalTests = 3; // Not counting env check
+            
+            let message = '';
+            let allPassed = successCount === totalTests;
+            
+            if (allPassed) {
+                message = `
+                    <h3 style="color: #10b981; margin-bottom: 10px;">🎉 All Tests Passed!</h3>
+                    <p>Your backend is properly configured and accessible.</p>
+                    <p><strong>Next Step:</strong> Test your frontend at 
+                    <a href="https://frontend-career-copilot.vercel.app" target="_blank">
+                        https://frontend-career-copilot.vercel.app
+                    </a></p>
+                `;
+                summary.style.background = '#d1fae5';
+                summary.style.borderColor = '#10b981';
+            } else if (successCount > 0) {
+                message = `
+                    <h3 style="color: #f59e0b; margin-bottom: 10px;">⚠️ Some Tests Failed</h3>
+                    <p>Passed: ${successCount}/${totalTests} tests</p>
+                    <p>Check the failed tests above for more details.</p>
+                `;
+                summary.style.background = '#fef3c7';
+                summary.style.borderColor = '#f59e0b';
+            } else {
+                message = `
+                    <h3 style="color: #ef4444; margin-bottom: 10px;">❌ Tests Failed</h3>
+                    <p>Your backend may not be properly configured.</p>
+                    <p>Review the error messages above and check the deployment guide.</p>
+                `;
+                summary.style.background = '#fee2e2';
+                summary.style.borderColor = '#ef4444';
+            }
+            
+            summary.innerHTML = message;
+        }
+    </script>
+</body>
+</html>

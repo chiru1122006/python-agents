@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roadmap Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px 5px; }
+        .output { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; white-space: pre-wrap; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Roadmap Generation Debug</h1>
+    
+    <div>
+        <button onclick="testBackendConnection()">1. Test Backend Connection</button>
+        <button onclick="testPythonConnection()">2. Test Python Service</button>
+        <button onclick="testUserData()">3. Test User Data</button>
+        <button onclick="generateRoadmap()">4. Generate Roadmap</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const PYTHON_BASE = 'http://localhost:5000/api';
+        
+        // Get auth token from localStorage
+        function getAuthToken() {
+            return localStorage.getItem('token');
+        }
+
+        async function testBackendConnection() {
+            log('Testing PHP Backend Connection...');
+            try {
+                const response = await fetch(`${API_BASE}/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+                const data = await response.json();
+                log(JSON.stringify(data, null, 2), response.ok ? 'success' : 'error');
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testPythonConnection() {
+            log('Testing Python Service Connection...');
+            try {
+                const response = await fetch(`${PYTHON_BASE}/health`);
+                const data = await response.json();
+                log(JSON.stringify(data, null, 2), 'success');
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testUserData() {
+            log('Fetching User Data (Skills, Goals, Gaps)...');
+            try {
+                // Get skills
+                const skillsRes = await fetch(`${API_BASE}/skills`, {
+                    headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+                });
+                const skillsData = await skillsRes.json();
+                
+                // Get goals
+                const goalsRes = await fetch(`${API_BASE}/goals`, {
+                    headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+                });
+                const goalsData = await goalsRes.json();
+                
+                // Get skill gaps
+                const gapsRes = await fetch(`${API_BASE}/skill-gaps`, {
+                    headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+                });
+                const gapsData = await gapsRes.json();
+                
+                log(`Skills: ${skillsData.data?.length || 0} found`);
+                log(`Goals: ${goalsData.data?.length || 0} found`);
+                log(`Skill Gaps: ${gapsData.data?.length || 0} found`);
+                log(JSON.stringify({
+                    skills: skillsData.data,
+                    goals: goalsData.data,
+                    gaps: gapsData.data
+                }, null, 2), 'success');
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function generateRoadmap() {
+            log('Generating Roadmap...');
+            try {
+                const response = await fetch(`${API_BASE}/agent/roadmap`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        timeline: '3 months'
+                    })
+                });
+                
+                const data = await response.json();
+                log('Response Status: ' + response.status);
+                log(JSON.stringify(data, null, 2), response.ok ? 'success' : 'error');
+                
+                // If successful, fetch plans
+                if (response.ok && data.status === 'success') {
+                    setTimeout(async () => {
+                        const plansRes = await fetch(`${API_BASE}/plans`, {
+                            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+                        });
+                        const plansData = await plansRes.json();
+                        log(`Plans created: ${plansData.data?.length || 0}`, 'success');
+                    }, 1000);
+                }
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+            }
+        }
+
+        function log(message, type = '') {
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.className = 'output ' + type;
+            div.textContent = message;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+    </script>
+</body>
+</html>

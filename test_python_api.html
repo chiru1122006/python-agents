@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Python API Directly</title>
+    <style>
+        body { font-family: monospace; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow: auto; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Test Python Agent API Directly</h1>
+    
+    <div>
+        <h3>User ID: <input type="number" id="userId" value="1" /></h3>
+        
+        <button onclick="testHealth()">Test Health</button>
+        <button onclick="getAgentState()">Get Agent State</button>
+        <button onclick="runSkillGap()">Run Skill Gap Analysis</button>
+        <button onclick="runRoadmap()">Generate Roadmap</button>
+    </div>
+
+    <h3>Response:</h3>
+    <pre id="output"></pre>
+
+    <script>
+        const PYTHON_API = 'http://localhost:5000/api';
+        
+        function log(msg, isError = false) {
+            const output = document.getElementById('output');
+            output.innerHTML = `<span class="${isError ? 'error' : 'success'}">${new Date().toISOString()}</span>\n${msg}\n\n${output.innerHTML}`;
+        }
+
+        async function testHealth() {
+            try {
+                const res = await fetch(`${PYTHON_API}/health`);
+                const data = await res.json();
+                log(`Health Check:\n${JSON.stringify(data, null, 2)}`);
+            } catch (err) {
+                log(`Error: ${err.message}`, true);
+            }
+        }
+
+        async function getAgentState() {
+            const userId = document.getElementById('userId').value;
+            try {
+                log(`Fetching agent state for user ${userId}...`);
+                const res = await fetch(`${PYTHON_API}/agent/state/${userId}`);
+                const data = await res.json();
+                log(`Agent State:\n${JSON.stringify(data, null, 2)}`);
+            } catch (err) {
+                log(`Error: ${err.message}`, true);
+            }
+        }
+
+        async function runSkillGap() {
+            const userId = document.getElementById('userId').value;
+            try {
+                log(`Running skill gap analysis for user ${userId}...`);
+                const res = await fetch(`${PYTHON_API}/agent/run`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: parseInt(userId),
+                        event_type: 'skill_gap',
+                        payload: {}
+                    })
+                });
+                const data = await res.json();
+                log(`Skill Gap Result:\n${JSON.stringify(data, null, 2)}`);
+            } catch (err) {
+                log(`Error: ${err.message}`, true);
+            }
+        }
+
+        async function runRoadmap() {
+            const userId = document.getElementById('userId').value;
+            try {
+                log(`Generating roadmap for user ${userId}...`);
+                const res = await fetch(`${PYTHON_API}/agent/run`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: parseInt(userId),
+                        event_type: 'roadmap',
+                        payload: { timeline: '3 months' }
+                    })
+                });
+                const data = await res.json();
+                log(`Roadmap Result:\n${JSON.stringify(data, null, 2)}`);
+            } catch (err) {
+                log(`Error: ${err.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

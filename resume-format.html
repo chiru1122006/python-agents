@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f3f4f6;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
+
+        /* Control Bar */
+        .control-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-bar button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-download {
+            background: #059669;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background: #047857;
+        }
+        
+        .btn-print {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-print:hover {
+            background: #1d4ed8;
+        }
+
+        /* Page Container - Using table for reliable PDF rendering */
+        .page {
+            width: 850px;
+            height: 1100px;
+            margin: 30px auto;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .resume-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .resume-table td {
+            vertical-align: top;
+            height: 100%;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a;
+            color: white;
+            padding: 35px 22px;
+            height: 1100px;
+        }
+
+        /* Profile Circle */
+        .profile-circle {
+            width: 110px;
+            height: 110px;
+            background-color: #334155;
+            border-radius: 55px;
+            margin: 0 auto 30px;
+            text-align: center;
+            line-height: 110px;
+        }
+        
+        .profile-initials {
+            font-size: 38px;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        /* Sidebar Sections */
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+        
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Contact Items */
+        .contact-list {
+            list-style: none;
+        }
+        
+        .contact-item {
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #cbd5e1;
+            display: table;
+            width: 100%;
+        }
+        
+        .contact-icon {
+            display: table-cell;
+            width: 25px;
+            color: #60a5fa;
+            vertical-align: top;
+            padding-top: 2px;
+        }
+        
+        .contact-text {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        /* Education Items */
+        .education-item {
+            margin-bottom: 16px;
+        }
+        
+        .education-degree {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 3px;
+        }
+        
+        .education-school {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+        
+        .education-year {
+            font-size: 11px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            line-height: 2;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin: 0 4px 6px 0;
+        }
+
+        /* Certifications */
+        .cert-list {
+            list-style: none;
+        }
+        
+        .cert-item {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            padding-left: 12px;
+            position: relative;
+        }
+        
+        .cert-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 35px 40px;
+            background: white;
+            height: 1100px;
+        }
+
+        /* Header */
+        .main-header {
+            margin-bottom: 28px;
+        }
+        
+        .main-name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 6px;
+            line-height: 1.1;
+        }
+        
+        .main-title {
+            font-size: 17px;
+            font-weight: 500;
+            color: #2563eb;
+        }
+
+        /* Main Sections */
+        .main-section {
+            margin-bottom: 26px;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+        
+        .section-icon {
+            color: #d1d5db;
+            margin-right: 8px;
+        }
+
+        /* Summary */
+        .summary-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #4b5563;
+        }
+
+        /* Experience Timeline */
+        .experience-item {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 22px;
+            border-left: 2px solid #dbeafe;
+        }
+        
+        .experience-dot {
+            position: absolute;
+            left: -6px;
+            top: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #3b82f6;
+        }
+        
+        .experience-dot.secondary {
+            background-color: #9ca3af;
+        }
+        
+        .experience-header {
+            margin-bottom: 4px;
+        }
+        
+        .experience-role {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+            display: inline;
+        }
+        
+        .experience-duration {
+            font-size: 11px;
+            font-weight: 600;
+            color: #2563eb;
+            background-color: #eff6ff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            float: right;
+        }
+        
+        .experience-duration.simple {
+            background: none;
+            color: #6b7280;
+            padding: 0;
+            font-weight: 400;
+        }
+        
+        .experience-company {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            clear: both;
+        }
+        
+        .experience-points {
+            margin: 0;
+            padding-left: 18px;
+        }
+        
+        .experience-points li {
+            font-size: 12px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+
+        /* Projects */
+        .project-item {
+            margin-bottom: 18px;
+            padding: 14px;
+            background: #faf7f2;
+            border-radius: 6px;
+        }
+        
+        .project-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+        
+        .project-tech {
+            font-size: 11px;
+            color: #2563eb;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .project-points {
+            margin: 0;
+            padding-left: 18px;
+        }
+        
+        .project-points li {
+            font-size: 12px;
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        /* Editable Highlight */
+        [contenteditable="true"]:hover {
+            outline: 2px dashed #60a5fa;
+            outline-offset: 2px;
+        }
+        
+        [contenteditable="true"]:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* Hide sections by default */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Control Bar -->
+    <div class="control-bar no-print">
+        <button class="btn-download" onclick="downloadPDF()">
+            <i class="fas fa-download"></i> Download PDF
+        </button>
+        <button class="btn-print" onclick="window.print()">
+            <i class="fas fa-print"></i> Print
+        </button>
+    </div>
+
+    <!-- Resume Page -->
+    <div id="resume-content" class="page">
+        <table class="resume-table">
+            <tr>
+                <!-- Left Sidebar -->
+                <td class="sidebar">
+                    <!-- Profile Initials -->
+                    <div class="profile-circle">
+                        <span id="profile-initials" class="profile-initials">JS</span>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Contact</h3>
+                        <ul class="contact-list" id="contact-container">
+                            <li class="contact-item" id="email-row">
+                                <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                                <span class="contact-text" id="contact-email" contenteditable="true">email@example.com</span>
+                            </li>
+                            <li class="contact-item" id="phone-row">
+                                <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                                <span class="contact-text" id="contact-phone" contenteditable="true">(555) 123-4567</span>
+                            </li>
+                            <li class="contact-item" id="address-row">
+                                <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                                <span class="contact-text" id="contact-address" contenteditable="true">City, State</span>
+                            </li>
+                            <li class="contact-item" id="linkedin-row">
+                                <span class="contact-icon"><i class="fab fa-linkedin"></i></span>
+                                <span class="contact-text" id="contact-linkedin" contenteditable="true">linkedin.com/in/username</span>
+                            </li>
+                            <li class="contact-item" id="website-row">
+                                <span class="contact-icon"><i class="fas fa-globe"></i></span>
+                                <span class="contact-text" id="contact-website" contenteditable="true">portfolio.com</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="sidebar-section" id="education-section">
+                        <h3 class="sidebar-title">Education</h3>
+                        <div id="education-container"></div>
+                    </div>
+
+                    <!-- Core Skills -->
+                    <div class="sidebar-section" id="skills-section">
+                        <h3 class="sidebar-title">Core Skills</h3>
+                        <div id="skills-container" class="skills-container"></div>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="sidebar-section" id="certifications-section">
+                        <h3 class="sidebar-title">Certifications</h3>
+                        <ul class="cert-list" id="certifications-container"></ul>
+                    </div>
+                </td>
+
+                <!-- Main Content -->
+                <td class="main-content">
+                    
+                    <!-- Header -->
+                    <div class="main-header">
+                        <h1 id="header-name" class="main-name" contenteditable="true">Your Name</h1>
+                        <p id="header-title" class="main-title" contenteditable="true">Your Title</p>
+                    </div>
+
+                    <!-- Professional Profile -->
+                    <div class="main-section" id="summary-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-user section-icon"></i>Professional Profile
+                        </h2>
+                        <p id="summary" class="summary-text" contenteditable="true">Your professional summary goes here...</p>
+                    </div>
+
+                    <!-- Work Experience -->
+                    <div class="main-section" id="experience-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-briefcase section-icon"></i>Work Experience
+                        </h2>
+                        <div id="experience-container"></div>
+                    </div>
+
+                    <!-- Projects -->
+                    <div class="main-section" id="projects-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-code section-icon"></i>Projects
+                        </h2>
+                        <div id="projects-container"></div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Resume data object
+        let resumeData = null;
+
+        // Get initials from name
+        function getInitials(name) {
+            if (!name) return 'NA';
+            const words = name.trim().split(' ');
+            if (words.length >= 2) {
+                return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        // Populate resume with data
+        function populateResume(data) {
+            if (!data) return;
+            resumeData = data;
+            
+            // Header
+            if (data.header) {
+                document.getElementById('header-name').innerText = data.header.name || 'Your Name';
+                document.getElementById('header-title').innerText = data.header.title || 'Your Title';
+                document.getElementById('profile-initials').innerText = getInitials(data.header.name);
+            }
+            
+            // Contact
+            if (data.contact) {
+                const setContact = (id, rowId, value) => {
+                    const el = document.getElementById(id);
+                    const row = document.getElementById(rowId);
+                    if (value && value.trim()) {
+                        el.innerText = value;
+                        row.style.display = 'table';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                };
+                setContact('contact-email', 'email-row', data.contact.email);
+                setContact('contact-phone', 'phone-row', data.contact.phone);
+                setContact('contact-address', 'address-row', data.contact.address);
+                setContact('contact-linkedin', 'linkedin-row', data.contact.linkedin);
+                setContact('contact-website', 'website-row', data.contact.website);
+            }
+            
+            // Summary
+            if (data.summary) {
+                document.getElementById('summary').innerText = data.summary;
+                document.getElementById('summary-section').classList.remove('hidden');
+            } else {
+                document.getElementById('summary-section').classList.add('hidden');
+            }
+            
+            // Education
+            const eduContainer = document.getElementById('education-container');
+            const eduSection = document.getElementById('education-section');
+            eduContainer.innerHTML = '';
+            if (data.education && data.education.length > 0) {
+                eduSection.classList.remove('hidden');
+                data.education.forEach(edu => {
+                    const div = document.createElement('div');
+                    div.className = 'education-item';
+                    div.innerHTML = `
+                        <div class="education-degree" contenteditable="true">${edu.degree || ''}</div>
+                        <div class="education-school" contenteditable="true">${edu.institution || ''}</div>
+                        <div class="education-year" contenteditable="true">${edu.year || ''}</div>
+                    `;
+                    eduContainer.appendChild(div);
+                });
+            } else {
+                eduSection.classList.add('hidden');
+            }
+            
+            // Skills
+            const skillsContainer = document.getElementById('skills-container');
+            const skillsSection = document.getElementById('skills-section');
+            skillsContainer.innerHTML = '';
+            if (data.skills && data.skills.length > 0) {
+                skillsSection.classList.remove('hidden');
+                data.skills.forEach(skill => {
+                    const span = document.createElement('span');
+                    span.className = 'skill-tag';
+                    span.contentEditable = true;
+                    span.innerText = typeof skill === 'string' ? skill : (skill.name || '');
+                    skillsContainer.appendChild(span);
+                });
+            } else {
+                skillsSection.classList.add('hidden');
+            }
+            
+            // Certifications
+            const certContainer = document.getElementById('certifications-container');
+            const certSection = document.getElementById('certifications-section');
+            certContainer.innerHTML = '';
+            if (data.certifications && data.certifications.length > 0) {
+                certSection.classList.remove('hidden');
+                data.certifications.forEach(cert => {
+                    const li = document.createElement('li');
+                    li.className = 'cert-item';
+                    li.contentEditable = true;
+                    li.innerText = typeof cert === 'string' ? cert : (cert.name || cert.title || '');
+                    certContainer.appendChild(li);
+                });
+            } else {
+                certSection.classList.add('hidden');
+            }
+            
+            // Experience
+            const expContainer = document.getElementById('experience-container');
+            const expSection = document.getElementById('experience-section');
+            expContainer.innerHTML = '';
+            if (data.experience && data.experience.length > 0) {
+                expSection.classList.remove('hidden');
+                data.experience.forEach((exp, index) => {
+                    const isFirst = index === 0;
+                    const div = document.createElement('div');
+                    div.className = 'experience-item';
+                    
+                    let pointsHtml = '';
+                    if (exp.points && exp.points.length > 0) {
+                        pointsHtml = '<ul class="experience-points">';
+                        exp.points.forEach(point => {
+                            pointsHtml += `<li contenteditable="true">${point}</li>`;
+                        });
+                        pointsHtml += '</ul>';
+                    }
+                    
+                    div.innerHTML = `
+                        <div class="experience-dot ${isFirst ? '' : 'secondary'}"></div>
+                        <div class="experience-header">
+                            <span class="experience-role" contenteditable="true">${exp.role || exp.title || ''}</span>
+                            <span class="experience-duration ${isFirst ? '' : 'simple'}" contenteditable="true">${exp.duration || ''}</span>
+                        </div>
+                        <div class="experience-company" contenteditable="true">${exp.company || ''}${exp.location ? ' • ' + exp.location : ''}</div>
+                        ${pointsHtml}
+                    `;
+                    expContainer.appendChild(div);
+                });
+            } else {
+                expSection.classList.add('hidden');
+            }
+            
+            // Projects - Always show, generate placeholder if empty
+            const projContainer = document.getElementById('projects-container');
+            const projSection = document.getElementById('projects-section');
+            projContainer.innerHTML = '';
+            
+            // Always show projects section
+            projSection.classList.remove('hidden');
+            
+            if (data.projects && data.projects.length > 0) {
+                data.projects.forEach(proj => {
+                    const div = document.createElement('div');
+                    div.className = 'project-item';
+                    
+                    let pointsHtml = '';
+                    if (proj.points && proj.points.length > 0) {
+                        pointsHtml = '<ul class="project-points">';
+                        proj.points.forEach(point => {
+                            pointsHtml += `<li contenteditable="true">${point}</li>`;
+                        });
+                        pointsHtml += '</ul>';
+                    }
+                    
+                    const techStack = proj.tech_stack ? proj.tech_stack.join(', ') : '';
+                    
+                    div.innerHTML = `
+                        <div class="project-title" contenteditable="true">${proj.title || proj.name || ''}</div>
+                        ${techStack ? `<div class="project-tech" contenteditable="true">${techStack}</div>` : ''}
+                        ${pointsHtml}
+                    `;
+                    projContainer.appendChild(div);
+                });
+            } else {
+                // Add placeholder projects if none exist
+                const placeholderProjects = generatePlaceholderProjects(data.skills || [], data.header?.title || 'Professional');
+                placeholderProjects.forEach(proj => {
+                    const div = document.createElement('div');
+                    div.className = 'project-item';
+                    div.innerHTML = `
+                        <div class="project-title" contenteditable="true">${proj.title}</div>
+                        <div class="project-tech" contenteditable="true">${proj.tech}</div>
+                        <ul class="project-points">
+                            ${proj.points.map(p => `<li contenteditable="true">${p}</li>`).join('')}
+                        </ul>
+                    `;
+                    projContainer.appendChild(div);
+                });
+            }
+        }
+        
+        // Generate placeholder projects based on skills
+        function generatePlaceholderProjects(skills, role) {
+            const skillNames = skills.map(s => typeof s === 'string' ? s : s.name).slice(0, 4);
+            const techString = skillNames.length > 0 ? skillNames.join(', ') : 'Modern Technologies';
+            
+            return [
+                {
+                    title: `${role} Portfolio Project`,
+                    tech: techString,
+                    points: [
+                        'Designed and developed a comprehensive project demonstrating core competencies',
+                        'Implemented best practices and industry-standard methodologies',
+                        'Achieved measurable improvements in efficiency and user experience'
+                    ]
+                },
+                {
+                    title: 'Professional Development Initiative',
+                    tech: techString,
+                    points: [
+                        'Led a self-directed project to enhance technical and professional skills',
+                        'Applied theoretical knowledge to practical, real-world scenarios',
+                        'Documented processes and outcomes for continuous improvement'
+                    ]
+                }
+            ];
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            const element = document.getElementById('resume-content');
+            const name = document.getElementById('header-name').innerText || 'resume';
+            const filename = name.toLowerCase().replace(/\s+/g, '_') + '_resume.pdf';
+            
+            // Configure html2pdf options for proper rendering
+            const opt = {
+                margin: 0,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    width: 850,
+                    windowWidth: 850
+                },
+                jsPDF: { 
+                    unit: 'px', 
+                    format: [850, 1100],
+                    orientation: 'portrait',
+                    hotfixes: ['px_scaling']
+                }
+            };
+            
+            // Generate PDF
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Load data on page load
+        function loadResumeData() {
+            // Check URL for base64 encoded data
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataParam = urlParams.get('data');
+            
+            if (dataParam) {
+                try {
+                    const decoded = JSON.parse(atob(dataParam));
+                    populateResume(decoded);
+                    return;
+                } catch (e) {
+                    console.error('Failed to parse URL data:', e);
+                }
+            }
+            
+            // Check localStorage
+            const savedData = localStorage.getItem('resumeData');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    populateResume(parsed);
+                    return;
+                } catch (e) {
+                    console.error('Failed to parse localStorage data:', e);
+                }
+            }
+            
+            // Load sample data for preview
+            const sampleData = {
+                header: { name: "Jordan Smith", title: "Senior Operations Manager" },
+                contact: {
+                    email: "jordan.smith@example.com",
+                    phone: "(555) 123-4567",
+                    address: "New York, NY",
+                    linkedin: "linkedin.com/in/jordan",
+                    website: "jordansmith.portfolio"
+                },
+                summary: "Results-oriented Senior Manager with over 7 years of experience driving operational efficiency and leading cross-functional teams in high-growth environments. Proven track record of optimizing workflows to reduce costs by 15% while improving employee satisfaction. Adept at bridging the gap between technical teams and business stakeholders to deliver complex projects on time and under budget.",
+                skills: [
+                    { name: "Strategic Planning" },
+                    { name: "Agile & Scrum" },
+                    { name: "Budget Management" },
+                    { name: "Stakeholder Relations" },
+                    { name: "Data Analysis" },
+                    { name: "JIRA / Asana" },
+                    { name: "Team Leadership" },
+                    { name: "Process Optimization" },
+                    { name: "Risk Management" }
+                ],
+                education: [
+                    { degree: "MBA, Business Admin", institution: "University of Chicago", year: "2016 - 2018" },
+                    { degree: "BS, Computer Science", institution: "University of Wisconsin", year: "2012 - 2016" }
+                ],
+                experience: [
+                    {
+                        role: "Senior Operations Lead",
+                        company: "TechFlow Solutions",
+                        location: "San Francisco, CA",
+                        duration: "2021 - Present",
+                        points: [
+                            "Spearheaded a department-wide restructuring initiative that improved project delivery speed by 25% within the first year.",
+                            "Managed a budget of $2.5M annually, consistently maintaining costs 10% below projection through strategic vendor negotiations.",
+                            "Implemented a new CRM system (Salesforce) across 3 regional offices, training 50+ staff members and increasing data accuracy by 40%.",
+                            "Mentored a team of 12 junior project managers, resulting in 3 internal promotions and improved retention rates."
+                        ]
+                    },
+                    {
+                        role: "Project Manager",
+                        company: "Nexus Innovations",
+                        location: "Austin, TX",
+                        duration: "2018 - 2021",
+                        points: [
+                            "Led the end-to-end lifecycle for 5 major SaaS product launches, generating over $1.2M in initial revenue.",
+                            "Coordinated daily stand-ups and sprint planning for a team of 15 developers and designers using Agile methodologies.",
+                            "Reduced client onboarding time by 3 weeks by redesigning the intake process and automating documentation."
+                        ]
+                    },
+                    {
+                        role: "Business Analyst",
+                        company: "Global Finance Corp",
+                        location: "Chicago, IL",
+                        duration: "2016 - 2018",
+                        points: [
+                            "Conducted market research and data modeling to identify new expansion opportunities in the fintech sector.",
+                            "Collaborated with the IT department to streamline SQL reporting, cutting report generation time by 60%."
+                        ]
+                    }
+                ],
+                projects: [
+                    {
+                        title: "Enterprise Resource Planning System",
+                        tech_stack: ["SAP", "SQL", "Python", "Tableau"],
+                        points: [
+                            "Led implementation of ERP system serving 500+ employees across 5 departments",
+                            "Reduced operational costs by 20% through automated workflows and real-time reporting"
+                        ]
+                    },
+                    {
+                        title: "Customer Analytics Dashboard",
+                        tech_stack: ["Power BI", "Python", "SQL Server"],
+                        points: [
+                            "Developed executive dashboard tracking KPIs across sales, marketing, and support",
+                            "Enabled data-driven decisions that increased customer retention by 15%"
+                        ]
+                    }
+                ],
+                certifications: [
+                    "PMP - Project Management Professional",
+                    "Certified ScrumMaster (CSM)",
+                    "Google Analytics Certificate",
+                    "Six Sigma Green Belt"
+                ]
+            };
+            populateResume(sampleData);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadResumeData);
+        
+        // Global function to receive data from API
+        window.setResumeData = function(data) {
+            populateResume(data);
+            localStorage.setItem('resumeData', JSON.stringify(data));
+        };
+    </script>
+</body>
+</html>
